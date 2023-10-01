@@ -11,10 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({Products}) {
       // define association here
-      this.hasMany(Products, {
-        onDelete: 'cascade',
-        as: 'products'
-      })
     }
   }
   Category.init({
@@ -24,5 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     tableName:'categories',
     modelName: 'Category',
   });
+  
   return Category;
 };
