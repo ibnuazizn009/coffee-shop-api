@@ -1,5 +1,8 @@
+const { User } = require('../models');
+
 module.exports = {
     verifyRegister: async(req, res, next) => {
+
         if(!req.body.username || req.body.username.length > 12){
             return res.status(400).json({
                 success: false,

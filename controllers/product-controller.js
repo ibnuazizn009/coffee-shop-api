@@ -24,13 +24,13 @@ module.exports = {
                 categoryID
             })
 
-            res.status(200).json({
+            res.status(201).json({
                 status:true,
                 message: 'Created successfull',
                 data: result
            })
         } catch (error) {
-            console.log(`error while creatng product`, error);
+            console.log(`error while creating product`, error);
             res.status(400).json(error);
         }
     },

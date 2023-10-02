@@ -24,6 +24,10 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING(255)
       },
+      isActive: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

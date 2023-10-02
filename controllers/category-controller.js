@@ -10,7 +10,7 @@ module.exports = {
                 name
            });
 
-           res.status(200).json({
+           res.status(201).json({
                 status:true,
                 message: 'Created successfull',
                 data: result
