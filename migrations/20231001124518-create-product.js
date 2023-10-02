@@ -43,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('Products');
+    await queryInterface.dropTable('products');
   }
 };
