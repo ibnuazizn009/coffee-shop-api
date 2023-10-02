@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         as: 'category'
       })
     }
+
+    toJSON() {
+      return { ...this.get(), categoryID: undefined }
+    }
   }
   Product.init({
     name: DataTypes.STRING,
@@ -25,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryID: DataTypes.STRING
   }, {
     sequelize,
-    tableName: 'produtcs',
+    tableName: 'products',
     modelName: 'Product',
   });
   

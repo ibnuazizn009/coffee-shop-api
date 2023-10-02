@@ -1,84 +1,110 @@
-const { Category } = require('../models');
+const { Category, Product } = require('../models');
 const { makeid } = require('../config/make-id');
 
 module.exports = {
-    createCategory: async(req, res, next) => {
-        const { name } = req.body;
-        try {
-           const result = await Category.create({
-                id: `CAT${makeid(8)}`,
-                name
-           });
+    createProduct: async(req, res, next) => {
+        const { name, quantity, quality, description, categoryID } = req.body;
+        const categoryid = await Category.findByPk(categoryID);
 
-           res.status(200).json({
+        try {
+            if(!categoryid){
+                return res.status(404).json({
+                    status: false,
+                    message: 'Category ID not found',
+                    data: {}
+                })
+            }
+
+            const result = await Product.create({
+                id: `PRD${makeid(8)}`,
+                name,
+                quantity,
+                quality,
+                description,
+                categoryID
+            })
+
+            res.status(200).json({
                 status:true,
                 message: 'Created successfull',
                 data: result
            })
         } catch (error) {
-            console.log(`error while creatng category`, error);
+            console.log(`error while creatng product`, error);
             res.status(400).json(error);
         }
     },
 
-    getCategory: async(req, res, next) => {
+    getProduct: async(req, res, next) => {
         try {
-            const result = await Category.findAll();
+            const result = await Product.findAll({
+                include: 'category'
+            });
 
             if(!result.length){
                 return res.status(404).json({
                     status: false,
-                    message: 'Category not found',
+                    message: 'Product not found',
                     data: {}
                 })
             }
 
             res.status(200).json({
                 status: true,
-                message: 'Category has been found',
+                message: 'Product has been found',
                 data: result
             })
         } catch (error) {
-            console.log(`error while getting category`, error);
+            console.log(`error while getting product`, error);
             res.status(400).json(error);
         }
     },
 
-    getCategorybyId: async(req, res, next) => {
+    getProductbyId: async(req, res, next) => {
         const { id } = req.params;
-        try {
-            const result = await Category.findByPk(id);
 
+        try {
+            const result = await Product.findOne({
+                where: {
+                    id
+                },
+                include: 'category'
+            });
+            
             if(!result){
                 return res.status(404).json({
                     status: false,
-                    message: `Category with id ${id} not found`,
+                    message: `Product with id ${id} not found`,
                     data: {}
                 })
             }
 
             res.status(200).json({
                 status: true,
-                message: 'Category has been found',
+                message: 'Product has been found',
                 data: result
             })
         } catch (error) {
-            console.log(`error while getting id category`, error);
+            console.log(`error while getting product id`, error);
             res.status(400).json(error);
         }
     },
 
-    updateCategory: async(req, res, next) => {
-        const { name } = req.body;
+    updateProduct: async(req, res, next) => {
+        const { name, quantity, quality, description, categoryID } = req.body;
         const { id } = req.params;
-        const updateid = await Category.findByPk(id);
-
+        const productid = await Product.findByPk(id);
+        
         try {
-            const result = await Category.update({
-                name: name
-            }, {where: {id}})
-
-            if(updateid){
+            const result = await Product.update({
+                name,
+                quantity,
+                quality,
+                description,
+                categoryID
+            })
+            
+            if(productid){
                 if(Number(result) === 1){
                     return res.status(200).json({
                         status: true,
@@ -98,29 +124,28 @@ module.exports = {
             }else{
                 return res.status(404).json({
                     status: false,
-                    message: `Category with id ${id} not found`,
+                    message: `Product with id ${id} not found`,
                     data: {}
                 })
             }
-            
         } catch (error) {
-            console.log(`error while updating category`, error);
+            console.log(`error while updating product id`, error);
             res.status(400).json(error);
         }
     },
 
-    deleteCategory: async(req, res, next) => {
+    deleteProduct: async(req, res, next) => {
         const { id } = req.params;
-        const categoryid = await Category.findByPk(id);
+        const productid = await Product.findByPk(id);
 
         try {
-            const result = await Category.destroy({
+            const result = await Product.destroy({
                 where: {
                     id
                 }
             })
 
-            if(categoryid){
+            if(productid){
                 if(result){
                     return res.status(200).json({
                         status: true,
@@ -139,13 +164,12 @@ module.exports = {
             }else{
                 return res.status(404).json({
                     status: false,
-                    message: `Category with id ${id} not found`,
+                    message: `Product with id ${id} not found`,
                     data: {}
                 })
             }
-
         } catch (error) {
-            console.log(`error while deleting category`, error);
+            console.log(`error while delete product`, error);
             res.status(400).json(error);
         }
     }

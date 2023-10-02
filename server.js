@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const createHttpError = require('http-errors');
 const { sequelize } = require('./models');
 const categoryRoute = require('./routes/category-routes');
+const productRoute = require('./routes/product-routes');
 
 const app = express();
 const http = require('http').Server(app);
@@ -13,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use('/api', categoryRoute.routes);
+app.use('/api', categoryRoute.routes, productRoute.routes);
 
 app.use((req, res, next) => {
     next(new createHttpError.NotFound())
