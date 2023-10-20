@@ -2,37 +2,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable('products', {
+    await queryInterface.createTable('orderItems', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: DataTypes.STRING(25)
       },
-      name: {
-        allowNull: false,
-        type: DataTypes.STRING(255)
-      },
       quantity: {
-        allowNull: false,
-        type: DataTypes.INTEGER(10)
+        type: DataTypes.INTEGER(5)
       },
-      quality: {
+      productId: {
         allowNull: false,
-        type: DataTypes.STRING(255)
-      },
-      description: {
-        allowNull: false,
-        type: DataTypes.STRING(255)
-      },
-      productImage: {
-        allowNull: false,
-        type: DataTypes.STRING(255)
-      },
-      categoryId: {
         type: DataTypes.STRING(25),
-        allowNull: false,
         references: {
-          model: 'categories',
+          model: 'products',
+          key: 'id'
+        }
+      },
+      orderId: {
+        allowNull: false,
+        type: DataTypes.STRING(25),
+        references: {
+          model: 'orders',
           key: 'id'
         }
       },
@@ -47,6 +38,6 @@ module.exports = {
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('products');
+    await queryInterface.dropTable('orderItems');
   }
 };

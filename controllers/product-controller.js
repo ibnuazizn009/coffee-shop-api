@@ -3,9 +3,9 @@ const { makeid } = require('../config/make-id');
 
 module.exports = {
     createProduct: async(req, res, next) => {
-        const { name, quantity, quality, description, categoryID } = req.body;
-        const categoryid = await Category.findByPk(categoryID);
-
+        const { name, quantity, quality, description, categoryId } = req.body;
+        const categoryid = await Category.findByPk(categoryId);
+        
         try {
             if(!categoryid){
                 return res.status(404).json({
@@ -21,7 +21,8 @@ module.exports = {
                 quantity,
                 quality,
                 description,
-                categoryID
+                productImage: req.file.path,
+                categoryId
             })
 
             res.status(201).json({
