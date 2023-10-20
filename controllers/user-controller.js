@@ -6,6 +6,63 @@ const { makeid } = require('../config/make-id');
 dotenv.config();
 
 module.exports = {
+    userSignIn: async(req, res, next) => {
+        const { email, password } = req.body;
+        try {
+            const result = await User.findOne({
+                where: {
+                    email: email
+                }
+            })
+
+            if(!result){
+                return res.status(404).json({
+                    status: false,
+                    message: 'Username or password incorrect!'
+                })
+            }
+
+            const validPassword = bcrypt.compareSync(password, result.dataValues.password);
+            if(!validPassword){
+                return res.status(401).json({
+                    success: false,
+                    message: 'Invalid password',
+                    data: {}
+                });
+            }
+
+            const token = 'Bearer ' + jwt.sign({
+                userId: result.dataValues.id,
+            }, process.env.SECRET_JWT, {
+                expiresIn: '7d'
+            });
+
+            let token_split = token.split(' ')[1];
+            await User.update({
+                token: token_split
+            }, {
+                where: {
+                    id: result.dataValues.id,
+                }
+            })
+
+            res.status(200).json({
+                success: true,
+                message: 'Successfully login',
+                data: {
+                    user: {
+                        "userId": result.dataValues.id,
+                        "username": result.dataValues.Username
+                    },
+                    accessToken: token
+                }
+            });
+        } catch (error) {
+            console.log(`error while login user`, error);
+            res.status(400).json(error);
+        }
+    },
+
     createUser: async(req, res, next) => {
         const { fullname, username, email, password } = req.body;
         const userdata = await User.findAll();
